@@ -1,0 +1,355 @@
+:root {
+  --card-rotate-x: 0deg;
+  --card-bg: rgba(8, 12, 20, 0.65);
+  --card-bg-strong: rgba(8, 12, 20, 0.9);
+  --activity-bg: rgba(12, 16, 24, 0.45);
+  --text-primary: #e6eef8;
+  --text-secondary: #9aa4b2;
+  --muted-divider: rgba(255,255,255,0.03);
+}
+
+body {
+  background: url('bg_lower.svg') center center / cover no-repeat #0f0f11;
+  display: flex;
+  justify-content: space-between; /* Pushes columns to the edges */
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto; /* Allows scrolling if screen is too small */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  padding: 40px 6vw; /* Spacing from the edges */
+  perspective: 2000px; /* Added global perspective for alignment */
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 32px; /* Space between the cards */
+  z-index: 1;
+  transform-style: preserve-3d;
+}
+
+/* --- Left Column Specifics --- */
+.left-column {
+  /* Rotate the entire column so cards align on a single flat wall */
+  transform: rotateY(35deg) rotateX(var(--card-rotate-x));
+}
+
+/* --- Right Column Specifics --- */
+.right-column {
+  /* Mirrored tilt for a symmetric dashboard look */
+  transform: rotateY(-35deg) rotateX(var(--card-rotate-x));
+}
+
+.scene {
+  /* Removed individual perspective so they share the global body perspective */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.header-box {
+  width: 340px;
+  height: 150px; /* Fixed height ensures all cards are identically sized */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  transform-style: preserve-3d;
+  background: transparent;
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(3,6,15,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  overflow: hidden;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.header-box:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 10px 30px rgba(3,6,15,0.6), 
+    0 0 20px rgba(255, 255, 255, 0.15), 
+    inset 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+.left-column .box-shadow-ambient {
+  left: -50px;
+}
+
+.right-column .box-shadow-ambient {
+  right: -50px;
+}
+
+.box-shadow-ambient {
+  position: absolute;
+  width: 140px;
+  background: rgba(0, 0, 0, 0.25);
+  filter: blur(30px);
+  border-radius: 50%;
+  transform: translateZ(-20px);
+  mix-blend-mode: multiply;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-avatar {
+  position: relative;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--card-bg);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.6);
+}
+
+.status-indicator.online { background: #3ba55c; box-shadow: 0 0 6px #3ba55c; }
+.status-indicator.idle { background: #faa61a; }
+.status-indicator.dnd { background: #ed4245; }
+.status-indicator.offline { background: #747f8d; }
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.display-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.username {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--muted-divider), transparent);
+  margin: 12px 0;
+}
+
+/* Mirror divider for right cards */
+.right-column .divider {
+  background: linear-gradient(270deg, var(--muted-divider), transparent);
+}
+
+.activity-section {
+  display: flex;
+  gap: 12px;
+}
+
+/* Hide album image and progress when showing the centered placeholder */
+.activity-section.no-activity .activity-icon { display: none; }
+.activity-section.no-activity .progress-container { display: none; }
+
+/* When there's no activity, keep the card size and center a placeholder */
+.activity-section.no-activity {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.activity-type.no-activity {
+  text-transform: none;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+.activity-name.no-activity {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: normal;
+  overflow: visible;
+}
+
+/* Uniform side card sizing (comfortable, consistent rhythm) */
+.left-column .scene,
+.right-column .scene {
+  height: 160px; /* uniform row height for side stacks */
+  min-height: 140px;
+  max-height: 220px;
+}
+
+/* Make header-box fill its scene so borders align */
+.left-column .scene .header-box,
+.right-column .scene .header-box {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.9rem 1.0rem;
+}
+
+/* Allow activity/profile content to scroll if too tall on small screens */
+.left-column .scene .header-box > .profile-section,
+.left-column .scene .header-box > .activity-section,
+.right-column .scene .header-box > .profile-section,
+.right-column .scene .header-box > .activity-section {
+  overflow: hidden;
+}
+
+@media (max-width: 980px) {
+  .left-column .scene,
+  .right-column .scene {
+    height: auto;
+  }
+  .left-column .scene .header-box,
+  .right-column .scene .header-box { padding: 1rem; }
+}
+
+.activity-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.activity-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.activity-type {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #f97316;
+  margin-bottom: 2px;
+}
+
+.activity-type.spotify-type {
+  color: #22c55e;
+}
+
+.activity-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a; /* Changed this back to a lighter color for dark mode legibility */
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-detail {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.progress-container {
+  margin-top: 6px;
+}
+
+.progress-bar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  border-radius: 2px;
+  width: 0%;
+}
+
+.time-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Game icon grid and hover (matches socials border effect) */
+.game-grid {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+}
+
+.game-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.game-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.game-icon::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 12px;
+  background: linear-gradient(90deg,#60a5fa,#7c3aed,#22c55e,#60a5fa);
+  filter: blur(0);
+  opacity: 0;
+  transition: opacity 180ms ease;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background-size: 200% 200%;
+}
+
+.game-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0);
+  transition: box-shadow 180ms ease;
+  z-index: 3;
+}
+
+.game-icon:hover::before { opacity: 1; }
+.game-icon:hover::after { box-shadow: 0 0 0 1px rgba(96,165,250,0.06) inset; }
+.game-icon:hover { transform: translateY(-4px); }
