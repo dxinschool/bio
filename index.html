@@ -4,10 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Activity Status</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <section class="hero-section">
 
   <!-- Left Column -->
   <div class="column left-column">
@@ -32,13 +37,21 @@
     <!-- Card 2 (Middle Left): Activity Card -->
     <div class="scene">
       <div class="box-shadow-ambient"></div>
-      <div class="header-box">
+      <div class="header-box character-card character-card-left">
+        <img class="card-character-image card-character-image-base" src="tomori.png" alt="" aria-hidden="true">
+        <img class="card-character-image card-character-image-hover" src="tomori2.png" alt="" aria-hidden="true">
         <div id="activity-container" class="activity-section hidden">
-          <img id="activity-icon" class="activity-icon" src="" alt="">
+          <a id="activity-song-link" class="activity-song-link is-disabled" aria-label="Activity album art">
+            <img id="activity-icon" class="activity-icon" src="" alt="">
+          </a>
           <div class="activity-info">
             <div id="activity-type" class="activity-type"></div>
             <div id="activity-name" class="activity-name"></div>
             <div id="activity-detail" class="activity-detail"></div>
+            <div id="lyrics-panel" class="lyrics-panel hidden" aria-live="polite">
+              <div id="lyrics-current" class="lyrics-line lyrics-line-current"></div>
+              <div id="lyrics-next" class="lyrics-line lyrics-line-next"></div>
+            </div>
             <div id="progress-container" class="progress-container">
               <div class="progress-bar">
                 <div id="progress-fill" class="progress-fill"></div>
@@ -53,13 +66,6 @@
       </div>
     </div>
 
-    <!-- Card 3 (Bottom Left): Blank -->
-    <div class="scene">
-      <div class="box-shadow-ambient"></div>
-      <div class="header-box">
-        <!-- Blank for later use -->
-      </div>
-    </div>
 
   </div>
 
@@ -95,39 +101,98 @@
     <!-- Card 5 (Middle Right): Localization -->
     <div class="scene">
       <div class="box-shadow-ambient"></div>
-      <div class="header-box">
-        <div class="activity-type" style="color: #ec4899;">Localization</div>
-        <div class="flex justify-between items-center mt-2">
-          <!-- Left side: Time & Location -->
-          <div>
-            <div class="text-2xl font-bold text-white flex items-baseline gap-2">
-              <span id="live-time">00:00:00</span>
-              <span class="text-sm font-normal text-slate-400">HKT</span>
+      <div class="header-box character-card character-card-right">
+        <img class="card-character-image card-character-image-base" src="cat.png" alt="" aria-hidden="true">
+        <img class="card-character-image card-character-image-hover" src="cat2.png" alt="" aria-hidden="true">
+        <div class="localization-content">
+          <div class="activity-type" style="color: #ec4899;">Localization</div>
+          <div class="flex justify-between items-center mt-2">
+            <!-- Left side: Time & Location -->
+            <div>
+              <div class="text-2xl font-bold text-white flex items-baseline gap-2">
+                <span id="live-time">00:00:00</span>
+                <span class="text-sm font-normal text-slate-400">HKT</span>
+              </div>
+              <div class="text-sm text-slate-400 mt-1">Hong Kong, Kowloon</div>
             </div>
-            <div class="text-sm text-slate-400 mt-1">Hong Kong, Kowloon</div>
-          </div>
-          
-          <!-- Right side: Weather -->
-          <div class="flex items-center gap-3 border-l border-white/10 pl-4">
-            <div class="flex flex-col items-end">
-              <div class="text-lg font-bold text-white leading-none" id="weather-temp">24°C</div>
-              <div class="text-xs text-slate-400 mt-1" id="weather-desc">Clear</div>
+
+            <!-- Right side: Weather -->
+            <div class="flex items-center gap-3 border-l border-white/10 pl-4">
+              <div class="flex flex-col items-end">
+                <div class="text-lg font-bold text-white leading-none" id="weather-temp">24°C</div>
+                <div class="text-xs text-slate-400 mt-1" id="weather-desc">Clear</div>
+              </div>
+                <span id="weather-icon" class="text-3xl drop-shadow-md"><img id="weather-icon-img" src="" alt="weather" style="width:32px;height:32px;display:none;object-fit:contain"></span>
             </div>
-              <span id="weather-icon" class="text-3xl drop-shadow-md"><img id="weather-icon-img" src="" alt="weather" style="width:32px;height:32px;display:none;object-fit:contain"></span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Card 6 (Bottom Right): Blank -->
-    <div class="scene">
-      <div class="box-shadow-ambient"></div>
-      <div class="header-box">
-        <!-- Blank for later use -->
+  </div>
+
+  <button id="scroll-hint" class="scroll-hint" type="button" aria-label="Scroll to About section">
+    <span class="scroll-hint-text">SCROLL</span>
+    <span class="scroll-hint-line" aria-hidden="true"></span>
+  </button>
+
+  </section>
+
+  <section id="about" class="page-section">
+    <div class="about-scene">
+      <div class="scene">
+        <div class="box-shadow-ambient"></div>
+        <article class="header-box about-box about-card-premium" aria-labelledby="about-title">
+          <div class="about-card-glow about-card-glow-a" aria-hidden="true"></div>
+          <div class="about-card-glow about-card-glow-b" aria-hidden="true"></div>
+
+          <div class="about-premium-grid">
+            <div class="about-premium-left">
+              <p class="about-kicker">ABOUT ME</p>
+              <h2 id="about-title" class="about-title-premium">DXuwu</h2>
+              <p class="about-lead">
+                Based in Hong Kong. I enjoy games, rhythm-heavy music, and learning security while building web stuff.
+              </p>
+
+              <div class="about-pill-row" aria-label="quick tags">
+                <span class="about-premium-pill">Hong Kong</span>
+                <span class="about-premium-pill">Cybersecurity learner</span>
+                <span class="about-premium-pill">BanGDream fan</span>
+              </div>
+            </div>
+
+            <div class="about-premium-right">
+              <div class="about-metric-list" aria-label="quick facts">
+                <div class="about-metric-item">
+                  <span class="about-metric-label">AGE</span>
+                  <span class="about-metric-value"><span id="live-age" class="about-live-age">17.00010000</span></span>
+                </div>
+                <div class="about-metric-item">
+                  <span class="about-metric-label">LOCATION</span>
+                  <span class="about-metric-value">Hong Kong</span>
+                </div>
+              </div>
+
+              <div class="about-interest-wrap" aria-label="interests">
+                <div class="about-interest-group">
+                  <span class="about-interest-label">Games</span>
+                  <div class="about-interest-list">
+                    <span class="about-interest-chip">Minecraft</span>
+                    <span class="about-interest-chip">Minecraft Dungeons</span>
+                    <span class="about-interest-chip">Roblox</span>
+                    <span class="about-interest-chip">Peak</span>
+                    <span class="about-interest-chip">Clash Royale</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
       </div>
     </div>
+  </section>
 
-  </div>
+  <button id="back-to-top" class="back-to-top" type="button" aria-label="Back to top">↑</button>
 
   <script src="script.js" defer></script>
 </body>
